@@ -10,13 +10,21 @@ const router = express.Router();
 // 🏠 POST/
 router.post('/', validateUser, (req, res) => {
   // do your magic!
-  res.status(200).json(req.user);
-});
-// NOT WORKING ⛔
+  const user = req.body;
+User.insert(user)
+  .then(user => {
+    res.status(200).json({user});
+  })
+  .catch(err => {
+    res.status(500).json({errMessage: "Unable to post"})
+  })
+})
+//  WORKING ✅
 
 // 🏠 POST/ :id/posts
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', validatePost, (req, res) => {
   // do your magic!
+  res.status(200).json(req.userposts);
 });
 // NOT WORKING ⛔
 
@@ -47,6 +55,7 @@ router.get('/:id', validateUserId, (req, res) => {
 
 router.get('/:id/posts', (req, res) => {
   // do your magic!
+  res.status(200).json(req.userposts);
 });
 
 // 🏠 DELETE/ :id
@@ -114,26 +123,34 @@ function validateUserId(req, res, next) {
 function validateUser(req, res, next) {
   // do your magic!
   const user = req.body;
-  User.insert(user)
-  .then(users => {
-    if(!users) {
-      res.status(400).json({errorMessage: "No user found"})
+
+    if(Object.keys(user).length === 0) {
+      res.status(400).json({errorMessage: "No body given"})
     } else if (!user.name) {
       res.status(400).json({errorMessage: "Not correct username"})
     } else {
-      req.users = users;
+      // req.users = users;
       next();
     }
-  });
 };
-// NOT WORKING ⛔
+//  WORKING ✅
 
 // 🏠 VALIDATE POST
 function validatePost(req, res, next) {
   // do your magic!
   const { id } = req.params;
-  const user = 
-
+  const user = { ...req.body, user_id: id};
+  
+    !users & console.log(users)
+    ? res.status(400).json({errorMessage: "VP not finding user ID"})
+    :!user.text
+    ? res.status(400).json({errorMessage: "Nope"})
+    : (req.userpost = users) & console.log(users) & next()
+  )
+  .catch (err => 
+    res.status(500).json({errorMessage: "Error in VP"})
+  )
 }
+// NOT WORKING ⛔
 
 module.exports = router;
