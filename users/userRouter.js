@@ -7,16 +7,20 @@ const Post = require('../posts/postDb.js');
 
 const router = express.Router();
 
-
+// 🏠 POST/
 router.post('/', validateUser, (req, res) => {
   // do your magic!
-  res.status(200).json(user);
+  res.status(200).json(req.user);
 });
+// NOT WORKING ⛔
 
+// 🏠 POST/ :id/posts
 router.post('/:id/posts', (req, res) => {
   // do your magic!
 });
+// NOT WORKING ⛔
 
+// 🏠 GET/
 router.get('/', (req, res) => {
   // do your magic!
   console.log(req.body);
@@ -32,7 +36,7 @@ router.get('/', (req, res) => {
     })
   })
 });
-// NOT WORKING ⛔
+// WORKING ✅
 
 // 🏠 GET/ :id
 router.get('/:id', validateUserId, (req, res) => {
@@ -63,12 +67,23 @@ router.delete('/:id', validateUserId, (req, res) => {
 // 🏠 PUT/ :id
 router.put('/:id', validateUserId, (req, res) => {
   // do your magic!
-  const { id } = user.params;
-  User.insert(user)
-    .then()
-  
+  // console.log(req.params); //id number
+  const { id } = req.params;
+  // console.log(req.body); //empty object
+  const change = req.body;
+  if (!change.name) {
+    res.status(400).json({errorMessage: "Unable to update"})
+  } else {
+    User.update(id, change)
+      .then(update => {
+        res.status(200).json(update);
+      })
+      .catch(err => {
+        res.status(500).json({errorMessage: "No changes made"})
+      })
+  }
 });
-
+// WORKING ✅
 
 // 🔆 Custom middleware
 
@@ -116,6 +131,9 @@ function validateUser(req, res, next) {
 // 🏠 VALIDATE POST
 function validatePost(req, res, next) {
   // do your magic!
+  const { id } = req.params;
+  const user = 
+
 }
 
 module.exports = router;
