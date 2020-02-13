@@ -31,6 +31,8 @@ function greeter(req, res, next) {
 // 🔆 VALIDATE USER ID
 function validateUserId(req, res, next) {
   const userId = req.params.id
+
+  
 }
 // ⛔
 
