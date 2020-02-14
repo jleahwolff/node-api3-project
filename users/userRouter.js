@@ -24,7 +24,12 @@ User.insert(user)
 // 🏠 POST/ :id/posts
 router.post('/:id/posts', validatePost, (req, res) => {
   // do your magic!
+  console.log(req.body.text);
+  const text = req.body.text;
+  User.insert(user)
+  .then()
   res.status(200).json(req.userposts);
+
 });
 // NOT WORKING ⛔
 
@@ -53,10 +58,14 @@ router.get('/:id', validateUserId, (req, res) => {
 });
 // WORKING ✅
 
-router.get('/:id/posts', (req, res) => {
+// 🏠 GET/ :id/posts
+router.get('/:id/posts', validatePost, (req, res) => {
   // do your magic!
-  res.status(200).json(req.userposts);
+  const userpost = req.body.text;
+  console.log(req.body.text);
+  // res.status(200).json(req.userposts);
 });
+// NOT WORKING ⛔
 
 // 🏠 DELETE/ :id
 router.delete('/:id', validateUserId, (req, res) => {
@@ -140,17 +149,17 @@ function validatePost(req, res, next) {
   // do your magic!
   const { id } = req.params;
   const user = { ...req.body, user_id: id};
-  
-    !users & console.log(users)
-    ? res.status(400).json({errorMessage: "VP not finding user ID"})
-    :!user.text
-    ? res.status(400).json({errorMessage: "Nope"})
-    : (req.userpost = users) & console.log(users) & next()
-  )
-  .catch (err => 
-    res.status(500).json({errorMessage: "Error in VP"})
-  )
+
+    if (Object.keys(user).length === 0) {
+      console.log(user)
+      res.status(400).json({errorMessage: "VP not finding body"})
+    } else if (!user.text){ 
+      res.status(400).json({errorMessage: "Missing post text"})
+    } else { 
+      next();
+    }
 }
+
 // NOT WORKING ⛔
 
 module.exports = router;
